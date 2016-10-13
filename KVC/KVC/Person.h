@@ -15,5 +15,6 @@
     
 }
 @property (nonatomic, strong) NSString* sex;
-
+@property (nonatomic, assign) NSUInteger age;
+@property (nonatomic, strong) NSArray* childrens;
 @end

@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		BA4136851DAFA7D300A615A7 /* Adress.m in Sources */ = {isa = PBXBuildFile; fileRef = BA4136841DAFA7D300A615A7 /* Adress.m */; };
 		BAFCDF0A1DAE3B0700E15336 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = BAFCDF091DAE3B0700E15336 /* main.m */; };
 		BAFCDF0D1DAE3B0700E15336 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = BAFCDF0C1DAE3B0700E15336 /* AppDelegate.m */; };
 		BAFCDF101DAE3B0700E15336 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = BAFCDF0F1DAE3B0700E15336 /* ViewController.m */; };
@@ -17,6 +18,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		BA4136831DAFA7D300A615A7 /* Adress.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Adress.h; sourceTree = "<group>"; };
+		BA4136841DAFA7D300A615A7 /* Adress.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Adress.m; sourceTree = "<group>"; };
 		BAFCDF051DAE3B0700E15336 /* KVC.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = KVC.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		BAFCDF091DAE3B0700E15336 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		BAFCDF0B1DAE3B0700E15336 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -67,6 +70,8 @@
 				BAFCDF0F1DAE3B0700E15336 /* ViewController.m */,
 				BAFCDF1F1DAE3B3C00E15336 /* Person.h */,
 				BAFCDF201DAE3B3C00E15336 /* Person.m */,
+				BA4136831DAFA7D300A615A7 /* Adress.h */,
+				BA4136841DAFA7D300A615A7 /* Adress.m */,
 				BAFCDF111DAE3B0700E15336 /* Main.storyboard */,
 				BAFCDF141DAE3B0700E15336 /* Assets.xcassets */,
 				BAFCDF161DAE3B0700E15336 /* LaunchScreen.storyboard */,
@@ -157,6 +162,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				BAFCDF101DAE3B0700E15336 /* ViewController.m in Sources */,
+				BA4136851DAFA7D300A615A7 /* Adress.m in Sources */,
 				BAFCDF0D1DAE3B0700E15336 /* AppDelegate.m in Sources */,
 				BAFCDF211DAE3B3C00E15336 /* Person.m in Sources */,
 				BAFCDF0A1DAE3B0700E15336 /* main.m in Sources */,
@@ -318,6 +324,7 @@
 				BAFCDF1E1DAE3B0700E15336 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

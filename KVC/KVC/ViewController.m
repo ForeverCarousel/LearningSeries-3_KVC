@@ -48,10 +48,24 @@
          
  
  */
+
+
 - (void)viewDidLoad
 {
     [super viewDidLoad];
     Person* person = [[Person alloc] init];
+    
+    
+    /**
+     如果Person 类重载了
+     -(void)setValue:(id)value forKey:(NSString *)key
+   
+     -(id)valueForKey:(NSString *)key
+    这两个方法那么所有的set 和 get方法都不会再调用 会首先去调用这两个方法
+
+     */
+    
+    
     /**
      person的name实例变量没有实现set和get方法 但是依然可以通过基类实现的KVC进行赋值
      */
@@ -87,15 +101,41 @@
         NSLog(@"无法获取，不存在 %@",key);
         return @"不存在 返回默认值";
      }
+     
+     如果不实现以上方法 则会导致崩溃 抛出异常如下
+     [<Person 0x7c08db60> setValue:forUndefinedKey:]: this class is not key value coding-compliant for the key girlFriend.'
+
      */
     [person setValue:@"Lily" forKey:@"girlFriend"];
     NSString* undefineKey = [person valueForKey:@"girlFriend"];
     NSLog(@"person‘s girlFriend  is:%@",undefineKey);
     
-    
     /**
-     如果Person 类实现了+(BOOL)accessInstanceVariablesDirectly 并且返回NO 则以上的方法都会因为没有实现set方法 KVC无法找到时 并且本方法返回了NO 会直接调用setValueForUndefineKey抛出异常
+     如果Person 类实现了+(BOOL)accessInstanceVariablesDirectly 并且返回NO 则以上的方法中实例变量会因为没有实现set方法 KVC无法找到时 并且本方法返回了NO 会直接调用setValueForUndefineKey抛出异常
      */
+    
+    
+    
+    
+    
+    
+    
+    [person setValue:@"BeijingHaidianStreet" forKeyPath:@"address.street"];
+    [person setValue:@"BeijingHaidianStreet" forKeyPath:@"address.something"];//undefineKey
+   
+    /**
+     不能对 非对象 类型的key设置空值 要重载方法防止crash
+     
+    我觉得这种情况可以用在服务器返回的数据生成model时  为model赋值是可以用kvc有效的防止某些非对象类型的值为空时导致的崩溃问题  具体有待实际验证   
+
+     */
+    [person setValue:nil forKey:@"age"];
+
+
+    NSString* personAdress = [person valueForKeyPath:@"address.street"];
+    NSLog(@"person‘s address street  is:%@",personAdress);
+    
+
     
     
 

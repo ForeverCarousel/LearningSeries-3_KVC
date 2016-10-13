@@ -7,6 +7,7 @@
 //
 
 #import "Person.h"
+#import "Adress.h"
 
 @interface Person()
 {
@@ -14,6 +15,7 @@
     NSString* _work;
 
 }
+@property (nonatomic, strong) Adress* address;
 
 @end
 
@@ -25,7 +27,7 @@
     self = [super init];
     if (self)
     {
-        
+        self.address = [[Adress alloc] init];
     }
     return self;
 }
@@ -46,13 +48,26 @@
     return _work;
 }
 
+//-(void)setValue:(id)value forKey:(NSString *)key
+//{
+//    [super setValue:value forUndefinedKey:key];
+//}
+//-(id)valueForKey:(NSString *)key
+//{
+//     return  [super valueForKey:key];
+//}
+
+-(void)setNilValueForKey:(NSString *)key
+{
+    NSLog(@"%@ 不能为%@设置空值",NSStringFromClass([self class]),key);
+}
 -(void)setValue:(id)value forUndefinedKey:(NSString *)key
 {
-    NSLog(@"无法设值，不存在 %@",key);
+    NSLog(@"%@无法设值，不存在 %@",NSStringFromClass([self class]),key);
 }
 -(id)valueForUndefinedKey:(NSString *)key
 {
-    NSLog(@"无法获取，不存在 %@",key);
+    NSLog(@"%@无法获取，不存在 %@",NSStringFromClass([self class]),key);
     return @"程序猿怎么可能有女盆友";
 }
 +(BOOL)accessInstanceVariablesDirectly
