@@ -8,6 +8,9 @@
 
 #import "ViewController.h"
 #import "Person.h"
+#import "Adress.h"
+#import <objc/runtime.h>
+#import "NSArray+SortOperator.h"
 
 @interface ViewController ()
 
@@ -23,7 +26,8 @@
         只要是基于NSObject的类都可以重写如下方法，因为NSKeyValueCoding是NSObject的一个类别
  
  
-                                NSKeyValueCoding类别中的常用方法
+                                NSKeyValueCoding非正式协议中的常用方法
+        * 非正式协议是相对于正式协议的 可以理解为就是category  即非正式协议中的方法都是默认继承的但是子类是否需要去实现就不一定的 是灵活的 所以称之为非正式协议
  
          + (BOOL)accessInstanceVariablesDirectly;
          默认返回YES，表示如果没有找到Set<Key>方法的话，会按照_key，_iskey，key，iskey的顺序搜索成员，设置成NO就不这样搜索
@@ -126,7 +130,7 @@
     /**
      不能对 非对象 类型的key设置空值 要重载方法防止crash
      
-    我觉得这种情况可以用在服务器返回的数据生成model时  为model赋值是可以用kvc有效的防止某些非对象类型的值为空时导致的崩溃问题  具体有待实际验证   
+    我觉得这种情况可以用在服务器返回的数据生成model时 可以为model设置一个处理这种防空值的父类实现三个方法  为model赋值时用kvc有效的防止某些非对象类型的值为空时导致的崩溃问题  具体有待实际验证
 
      */
     [person setValue:nil forKey:@"age"];
@@ -138,9 +142,164 @@
 
     
     
+    
+                            /**
+                                            KVC 中的 Collection  Operators
+                             
+                             Collection Operators有3种，分别是：
+                             1. Simple Collection Operators
+                             2. Object Operators
+                             3. Array and Set Operators。
+                             操作对象均为数组或集合
+                             
+                             */
+    
+    
+    /*  
+     Simple Collection Operators
+     @avg:求均值
+     @count:求总数
+     @max:求最大值
+     @min:求最小值
+     @sum:求和
+     
+     */
+    
+    Adress* ad1 = [[Adress alloc] init];
+    ad1.streetNum = 100;
+    
+    Adress* ad2 = [[Adress alloc] init];
+    ad2.streetNum = 110;
+    
+    Adress* ad3 = [[Adress alloc] init];
+    ad3.streetNum = 120;
+
+    NSArray* ads = @[ad1,ad2,ad3];
+    
+    NSNumber* avg = [ads valueForKeyPath:@"@avg.streetNum"];
+    NSNumber* count = [ads valueForKeyPath:@"@count.streetNum"];
+    NSNumber* max = [ads valueForKeyPath:@"@max.streetNum"];
+    NSNumber* min = [ads valueForKeyPath:@"@min.streetNum"];
+    NSNumber* sum = [ads valueForKeyPath:@"@sum.streetNum"];
+    NSLog(@"ads's  avg:%@  count:%@  max:%@ min:%@ sum:%@",avg,count,max,min,sum);
 
     
+    
+    /**
+     Object Operators
+     @unionOfObjects:返回操作对象内部的所有对象，返回值为数组
+     @distinctUnionOfObjects:返回操作对象内部的不同对象，返回值为数组
+     
+     */
+    Adress* ad4 = [[Adress alloc] init];
+    ad4.provience = @"beijing";
+    
+    Adress* ad5 = [[Adress alloc] init];
+    ad5.provience = @"shanghai";
+    
+    Adress* ad6 = [[Adress alloc] init];
+    ad6.provience = @"guangzhou";
+    
+    Adress* ad7 = [[Adress alloc] init];
+    ad7.provience = @"guangzhou";
+    
+    NSArray* ads2 = @[ad4,ad5,ad6,ad7];
+    
+    NSArray* allProvs = [ads2 valueForKeyPath:@"@unionOfObjects.provience"];
+    NSArray* diffProvs = [ads2 valueForKeyPath:@"@distinctUnionOfObjects.provience"];
+
+    NSLog(@"all provs :%@  \n  diffProvs:%@",allProvs,diffProvs);
+    
+    
+    
+    
+    /**
+     Array and Set Operators
+     @unionOfArrays:返回操作对象（且操作对象内的对象必须是数组/集合）中数组/集合的所有对象，返回值为数组
+     @distinctUnionOfArrays:返回操作对象（且操作对象内对象必须是数组/集合）中数组/集合的不同对象，返回值为数组
+     @distinctUnionOfSets:返回操作对象（且操作对象内对象必须是数组/集合）中数组/集合的所有对象，返回值为集合
+     */
+    //不写代码例子了  跟上面的类似 不过所操作的对象不再是简单对象 是以数组或者set为操作单体
+    
+    [self  justTryIt];
+    
 }
+
+
+-(void)justTryIt
+{
+    
+    Adress* ad1 = [[Adress alloc] init];
+    ad1.provience = @"beijing";
+    
+    Adress* ad2 = [[Adress alloc] init];
+    ad2.provience = @"shanghai";
+    
+    Adress* ad3 = [[Adress alloc] init];
+    ad3.provience = @"guangzhou";
+    
+    Adress* ad4 = [[Adress alloc] init];
+    ad4.provience = @"beijing";
+    
+    Adress* ad5 = [[Adress alloc] init];
+    ad5.provience = @"guangzhou";
+    
+    Adress* ad6 = [[Adress alloc] init];
+    ad6.provience = @"guangzhou";
+  
+    NSArray* ads = @[ad1,ad2,ad3,ad4,ad5,ad6];
+
+    
+    
+    //尝试自己去实现自定义个collection operator PS：貌似Apple文档明确提示不支持自定义
+    
+    
+    /**
+     尝试实现一个对数据进行排序的operator 首先这里先看下系统是如何实现NSArray的其他operator的
+     */
+    NSUInteger count = 0;
+    Method* methods =  class_copyMethodList([NSArray class], &count);
+    for (int i = 0; i < count; ++i)
+    {
+        Method m = methods[i];
+        SEL sel = method_getName(m);
+//        NSLog(@"NSArray的方法：%@",NSStringFromSelector(sel));
+        /**
+         可以看到系统实现的方法名字如下 所以实现一个NSArray类别 要仿照系统方法的命名规则 方法以_开头具体见类别
+         .
+         .
+         .
+         2016-10-14 18:24:18.170 KVC[10721:890961] NSArray的方法：_sumForKeyPath:
+         2016-10-14 18:24:18.170 KVC[10721:890961] NSArray的方法：_unionOfArraysForKeyPath:
+         2016-10-14 18:24:18.170 KVC[10721:890961] NSArray的方法：_unionOfObjectsForKeyPath:
+         2016-10-14 18:24:18.171 KVC[10721:890961] NSArray的方法：_avgForKeyPath:
+         2016-10-14 18:24:18.171 KVC[10721:890961] NSArray的方法：_countForKeyPath:
+         2016-10-14 18:24:18.172 KVC[10721:890961] NSArray的方法：_maxForKeyPath:
+         2016-10-14 18:24:18.172 KVC[10721:890961] NSArray的方法：_minForKeyPath:
+         .
+         .
+         .
+
+         */
+        if ([NSStringFromSelector(sel) hasPrefix:@"_avg"])
+        {
+            NSLog(@"@avg operator 实现的方法名字为 ：%@",NSStringFromSelector(sel));
+            break;
+            //2016-10-14 18:26:44.787 KVC[10760:893220] @avg operator 实现的方法名字为 ：_avgForKeyPath:
+            
+        }
+        
+    }
+    
+    //自定义实现 根据传入的数组中的对象的某个属性 返回所有的数组的中该属性的值 去重
+   NSSet* set = [ads valueForKeyPath:@"@carouselObjects.provience"];
+    
+    
+    NSLog(@"所有人的地址集合为：%@",set);
+    
+    
+}
+
 
 
 - (void)didReceiveMemoryWarning {

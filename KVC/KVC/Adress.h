@@ -10,4 +10,6 @@
 
 @interface Adress : NSObject
 
+@property (nonatomic, assign) NSInteger streetNum;
+@property (nonatomic, strong) NSString* provience;
 @end
