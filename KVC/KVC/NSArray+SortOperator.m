@@ -23,7 +23,7 @@
         [result addObject:var];
     }
     
-    return result; 
+    return result;
 
 }
 @end

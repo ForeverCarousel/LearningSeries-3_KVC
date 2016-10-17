@@ -23,7 +23,9 @@
  
                                         KVC简介
         KVC（Key-value coding）键值编码，就是指iOS的开发中，可以允许开发者通过Key名直接访问对象的属性，或者给对象的属性赋值。而不需要调用明确的存取方法。这样就可以在运行时动态在访问和修改对象的属性。而不是在编译时确定，这也是iOS开发中的黑魔法之一。很多高级的iOS开发技巧都是基于KVC实现的。
-        只要是基于NSObject的类都可以重写如下方法，因为NSKeyValueCoding是NSObject的一个类别
+        只要是基于NSObject的类都可以重写如下方法，因为NSKeyValueCoding是NSObject的一个类别 又称作非正式协议 其实就是一个category  另外在.m中实现的“@ interface”称之为扩展 又称之为匿名类别 与category的区别主要是 ：
+        1、扩展中的方法和属性都属于私有 求作用域仅限类本身 其方法是在编译时就会被添加到类中的 所以如果只有方法声明而没有实现的话 编译器会发出警告
+        2、category的方法是在运行时被添加到类中的  其子类也会继承category的方法  可以有选择性的去重写
  
  
                                 NSKeyValueCoding非正式协议中的常用方法
